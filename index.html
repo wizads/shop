@@ -446,11 +446,11 @@
             margin-top: 15px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.5s ease;
         }
         
         .category-title.active + .products-list {
-            max-height: 2000px;
+            max-height: 5000px; /* Increased to ensure all products show */
         }
         
         .product-list-item {
@@ -1508,7 +1508,7 @@
                         </div>
                         <div class="product-list-content">
                             <h3 class="product-list-title">Premium Facebook Fan Pages (10K–50K Followers) – Instantly Rebrandable to Any Niche</h3>
-                            <p class="product-list-description">Rebbrandable to Any Niche</p>
+                            <p class="product-list-description">Rebrandable to Any Niche</p>
                         </div>
                         <div class="product-list-price">$220</div>
                         <div class="product-list-actions">
@@ -1832,7 +1832,7 @@
                     </div>
                     
                     <div class="product-list-item">
-                        <div class="product-badge">PREMIUM</div>
+                        <div class="product-badge">PREmium</div>
                         <div class="product-list-icon">
                             <i class="fas fa-medal"></i>
                         </div>
@@ -2024,7 +2024,7 @@
                 
                 <div class="benefit-card">
                     <div class="benefit-icon">
-                            <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock"></i>
                     </div>
                     <h3 class="benefit-title">Secure Transactions</h3>
                     <p>All transactions protected with escrow service</p>
@@ -2125,11 +2125,19 @@
             mobileMenu.classList.toggle('active');
         });
         
-        // Category accordion toggle
+        // Category accordion toggle - FIXED
         const categoryTitles = document.querySelectorAll('.category-title');
         
         categoryTitles.forEach(title => {
             title.addEventListener('click', () => {
+                // Close all other categories
+                categoryTitles.forEach(otherTitle => {
+                    if (otherTitle !== title) {
+                        otherTitle.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current category
                 title.classList.toggle('active');
             });
         });
@@ -2157,8 +2165,8 @@
             cartSidebar.classList.add('active');
         });
         
-        // Close cart
-        closeCart.addEventListener('click', () {
+        // Close cart - FIXED syntax error
+        closeCart.addEventListener('click', () => {
             cartOverlay.classList.remove('active');
             cartSidebar.classList.remove('active');
         });
@@ -2320,23 +2328,6 @@
             }
         });
         
-        // Simulate changing response times for service status
-        function updateResponseTime() {
-            const responseTimes = [5, 8, 10, 12, 15];
-            const randomIndex = Math.floor(Math.random() * responseTimes.length);
-            const responseTime = responseTimes[randomIndex];
-            
-            document.querySelector('.detail-item:nth-child(2) .detail-value').textContent = 
-                `${responseTime} minutes`;
-        }
-        
-        // Update response time every 30 seconds
-        setInterval(updateResponseTime, 30000);
-        updateResponseTime();
-        
-        // Open first category by default
-        document.querySelector('.category-title').classList.add('active');
-        
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdowns = document.querySelectorAll('.contact-dropdown');
@@ -2345,6 +2336,11 @@
                     dropdown.querySelector('.contact-dropdown-content').style.display = 'none';
                 }
             });
+        });
+        
+        // Open first category by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.category-title').classList.add('active');
         });
     </script>
 </body>
