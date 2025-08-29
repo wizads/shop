@@ -176,7 +176,7 @@
             box-shadow: 0 8px 15px rgba(110, 68, 255, 0.3);
         }
         
-        /* NEW: Contact Dropdown Styles */
+        /* NEW: Contact Dropdown Styles - FIXED */
         .contact-dropdown {
             position: relative;
             display: inline-block;
@@ -243,7 +243,7 @@
             text-align: center;
         }
         
-        .contact-dropdown:hover .contact-dropdown-content {
+        .contact-dropdown.show .contact-dropdown-content {
             display: block;
             animation: fadeIn 0.3s ease;
         }
@@ -420,6 +420,11 @@
             cursor: pointer;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .category-title:hover {
+            color: var(--primary);
         }
         
         .category-icon {
@@ -438,7 +443,7 @@
             transform: rotate(90deg);
         }
         
-        /* Product list view */
+        /* Product list view - FIXED SMOOTH ANIMATION */
         .products-list {
             display: flex;
             flex-direction: column;
@@ -447,10 +452,15 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
         }
         
         .category-title.active + .products-list {
-            max-height: 5000px; /* Increased to ensure all products show */
+            max-height: 10000px; /* Increased to ensure all products show */
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .product-list-item {
@@ -729,11 +739,15 @@
         .cart-item-details {
             flex: 1;
             padding-right: 15px;
+            overflow: hidden;
         }
         
         .cart-item-name {
             font-weight: 600;
             margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .cart-item-price {
@@ -750,6 +764,7 @@
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s;
+            flex-shrink: 0;
         }
         
         .remove-item:hover {
@@ -881,6 +896,7 @@
             background: linear-gradient(to right, var(--secondary), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: inline-block;
         }
         
         .checkout-message {
@@ -1297,9 +1313,9 @@
                     <span class="cart-count">0</span>
                 </button>
                 
-                <!-- NEW: Contact Dropdown -->
-                <div class="contact-dropdown">
-                    <button class="contact-dropdown-btn">
+                <!-- NEW: Contact Dropdown - FIXED -->
+                <div class="contact-dropdown" id="contactDropdown">
+                    <button class="contact-dropdown-btn" id="contactDropdownBtn">
                         <i class="fas fa-comments"></i> <span>Contact Us</span>
                     </button>
                     <div class="contact-dropdown-content">
@@ -1391,7 +1407,7 @@
     <section class="products" id="products">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">We’ll Make You an Offer You Can’t Refuse</h2>
+                <h2 class="section-title">We'll Make You an Offer You Can't Refuse</h2>
                 <p class="section-subtitle">Feel Free to select any Product From the List Below</p>
             </div>
             
@@ -2016,7 +2032,7 @@
                 
                 <div class="benefit-card">
                     <div class="benefit-icon">
-                        <i class="fas fa-headset"></i>
+                    <i class="fas fa-headset"></i>
                     </div>
                     <h3 class="benefit-title">24/7 Support</h3>
                     <p>Dedicated support team available anytime</p>
@@ -2125,7 +2141,7 @@
             mobileMenu.classList.toggle('active');
         });
         
-        // Category accordion toggle - FIXED
+        // Category accordion toggle - FIXED SMOOTH ANIMATION
         const categoryTitles = document.querySelectorAll('.category-title');
         
         categoryTitles.forEach(title => {
@@ -2157,6 +2173,10 @@
         const checkoutModal = document.getElementById('checkoutModal');
         const closeCheckoutModal = document.getElementById('closeCheckoutModal');
         
+        // Contact dropdown elements - FIXED
+        const contactDropdown = document.getElementById('contactDropdown');
+        const contactDropdownBtn = document.getElementById('contactDropdownBtn');
+        
         let cart = [];
         
         // Open cart
@@ -2165,7 +2185,7 @@
             cartSidebar.classList.add('active');
         });
         
-        // Close cart - FIXED syntax error
+        // Close cart
         closeCart.addEventListener('click', () => {
             cartOverlay.classList.remove('active');
             cartSidebar.classList.remove('active');
@@ -2328,14 +2348,22 @@
             }
         });
         
+        // FIXED: Contact Dropdown Functionality
+        contactDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            contactDropdown.classList.toggle('show');
+        });
+        
         // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdowns = document.querySelectorAll('.contact-dropdown');
-            dropdowns.forEach(dropdown => {
-                if (!dropdown.contains(event.target)) {
-                    dropdown.querySelector('.contact-dropdown-content').style.display = 'none';
-                }
-            });
+        document.addEventListener('click', (e) => {
+            if (!contactDropdown.contains(e.target)) {
+                contactDropdown.classList.remove('show');
+            }
+        });
+        
+        // Prevent dropdown from closing when clicking inside it
+        contactDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
         
         // Open first category by default
