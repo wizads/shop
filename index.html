@@ -888,6 +888,7 @@
             justify-content: center;
             margin: 0 auto 25px;
             font-size: 36px;
+            animation: pulse 2s infinite;
         }
         
         .checkout-title {
@@ -947,6 +948,27 @@
             border-radius: 20px;
             font-size: 0.9rem;
             margin-bottom: 15px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 3000;
+            animation: fadeInOut 3s ease;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-20px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
         }
         
         /* Footer */
@@ -2208,11 +2230,7 @@
                 // Update cart UI
                 updateCart();
                 
-                // Show cart
-                cartOverlay.classList.add('active');
-                cartSidebar.classList.add('active');
-                
-                // Show success message
+                // Show success message (cart will NOT automatically open)
                 showSuccessMessage(`${product} added to cart!`);
             });
         });
@@ -2366,10 +2384,7 @@
             e.stopPropagation();
         });
         
-        // Open first category by default
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.category-title').classList.add('active');
-        });
+        // REMOVED: Code that automatically opens the first category
     </script>
 </body>
 </html>
